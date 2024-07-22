@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
 function Box() {
   const mesh = useRef();
@@ -42,21 +43,73 @@ function Sphere() {
   );
 }
 
+function Pyramid() {
+  const mesh = useRef();
+
+  // Define vertices of the pyramid
+  const vertices = new Float32Array([
+    // Base vertices
+    -1.0, -1.0, 1.0,  // Vertex 0
+    1.0, -1.0, 1.0,   // Vertex 1
+    1.0, -1.0, -1.0,  // Vertex 2
+    -1.0, -1.0, -1.0, // Vertex 3
+    // Apex vertex
+    0.0, 1.0, 0.0     // Vertex 4
+  ]);
+
+  // Define faces of the pyramid (using vertex indices)
+  const indices = new Uint16Array([
+    // Base face (square)
+    0, 1, 2,
+    0, 2, 3,
+    // Side faces (triangles)
+    0, 1, 4,
+    1, 2, 4,
+    2, 3, 4,
+    3, 0, 4
+  ]);
+
+  // Create a buffer geometry and set the attributes
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+  geometry.setIndex(new THREE.BufferAttribute(indices, 1));
+  geometry.computeVertexNormals(); // Compute normals for lighting
+
+  // Optional: Add a rotation animation
+  useFrame(() => {
+    mesh.current.rotation.x += 0.01;
+    mesh.current.rotation.y += 0.01;
+  });
+
+  return (
+    <mesh ref={mesh} geometry={geometry}>
+      <meshStandardMaterial color="green" side={THREE.DoubleSide} />
+    </mesh>
+  );
+}
+
 function App() {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-      <div style={{ width: '45%', height: '400px', backgroundColor: 'blue' }}>
+      <div style={{ width: '30%', height: '400px', backgroundColor: 'blue' }}>
         <Canvas>
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
           <Box />
         </Canvas>
       </div>
-      <div style={{ width: '45%', height: '400px', backgroundColor: 'orange' }}>
+      <div style={{ width: '30%', height: '400px', backgroundColor: 'green' }}>
         <Canvas>
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
           <Sphere />
+        </Canvas>
+      </div>
+      <div style={{ width: '30%', height: '400px', backgroundColor: 'orange' }}>
+      <Canvas >
+          <ambientLight />
+          <pointLight position={[10, 10, 10]} />
+          <Pyramid />
         </Canvas>
       </div>
     </div>
