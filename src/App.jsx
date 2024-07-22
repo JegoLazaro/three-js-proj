@@ -13,7 +13,7 @@ function Box() {
 
   return (
     <mesh ref={mesh} scale={3}>
-      <boxGeometry args={[1, 1, 1]} />
+      <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color={'orange'} />
     </mesh>
   );
@@ -61,7 +61,7 @@ function Pyramid() {
   const indices = new Uint16Array([
     // Base face (square)
     0, 1, 2,
-    0, 2, 3,
+    0, 0, 0,
     // Side faces (triangles)
     0, 1, 4,
     1, 2, 4,
@@ -77,8 +77,8 @@ function Pyramid() {
 
   // Optional: Add a rotation animation
   useFrame(() => {
-    mesh.current.rotation.x += 0.01;
-    mesh.current.rotation.y += 0.01;
+    mesh.current.rotation.x += 0.04;
+    mesh.current.rotation.y += 0.04;
   });
 
   return (
@@ -90,6 +90,7 @@ function Pyramid() {
 
 function App() {
   return (
+    <>
     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
       <div style={{ width: '30%', height: '400px', backgroundColor: 'blue' }}>
         <Canvas>
@@ -113,6 +114,16 @@ function App() {
         </Canvas>
       </div>
     </div>
+    <div style={{ marginTop: 30, width: '100%', height: '400px', backgroundColor: 'red' }}>
+        <Canvas>
+          {/* <ambientLight /> */}
+          <pointLight position={[10, 10, 10]} />
+          {/* <Box /> */}
+          <Pyramid />
+          <Sphere />
+        </Canvas>
+      </div>
+    </>
   );
 }
 
